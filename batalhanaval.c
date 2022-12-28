@@ -1,7 +1,10 @@
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
+#include <stdlib.h>
 char campo[10][10];
 char campoMaquina[10][10];
+int verificar = 0;
 
 int LimparCampo()
 {
@@ -10,9 +13,7 @@ int LimparCampo()
         for (int count = 1; count <= 10; count++)
         {
             campo[counter][count] = 126;
-            printf("%c  ", campo[counter][count]);
         }
-        printf("\n");
     }
     return 0;
 }
@@ -28,13 +29,23 @@ int Campo()
     }
     return 0;
 }
-int CampoMaquina()
+int LimparCampoMaquina()
 {
     for (int counter = 1; counter <= 10; counter++)
     {
         for (int count = 1; count <= 10; count++)
         {
             campoMaquina[counter][count] = 126;
+        }
+    }
+    return 0;
+}
+int CampoMaquina()
+{
+    for (int counter = 1; counter <= 10; counter++)
+    {
+        for (int count = 1; count <= 10; count++)
+        {
             printf("%c  ", campoMaquina[counter][count]);
         }
         printf("\n");
@@ -101,15 +112,14 @@ void Navio3()
     }
 }
 
-
 // variável para interromper o loop
-int verificar = 0;
+
 int Navio1Add(int linha, int coluna)
 {
     int L, C, S;
     L = linha;
     C = coluna;
-    if ( L + 4 <=10 ){
+    if ( L + 3 <=10 ){
         for (int x = 0; x < 4; x++)
         {
             S = L+ x;
@@ -125,6 +135,7 @@ int Navio1Add(int linha, int coluna)
     }
     return 0;
 }
+
 void Navio2Add(int linha, int coluna)
 {
     int L = linha;
@@ -171,7 +182,7 @@ void Navio3Add(int linha, int coluna)
             S = L + x;
             if (campo[S][C] == 126 && campo[S][C-2] == 126 && campo[S][C+2] == 126)
             {
-                if (x == 0 && C == 2)
+                if (x == 0)
                 {
                     campo[L][C] = 35;
                 }
@@ -191,20 +202,102 @@ void Navio3Add(int linha, int coluna)
         printf("Local invalido para adicionar o navio 3, tente outro!\n");
     }
 }
+void Navio1AddMaquina(int linha, int coluna)
+{
+    int L, C, S;
+    L = linha;
+    C = coluna;
+    if ( L + 3 <=10 && campoMaquina[L][C] == 126 && campoMaquina[L+1][C] == 126 && campoMaquina[L+2][C] == 126 && campoMaquina[L+3][C] == 126 ){
+        for (int x = 0; x < 4; x++)
+        {
+            S = L+ x;
+            campoMaquina[S][C] = 35;
+            verificar = 1;
+        }
+        verificar = 1;
+    }
+}
+void Navio2AddMaquina(int linha, int coluna)
+{
+    int L = linha;
+    int C = coluna;
+    int S;
+    if (L + 4 <=10 && C-1>0 && C+1 <=10)
+    {
+        for (int x = 0; x < 4; x++)
+        {
+            S = L+ x;
+            if (campoMaquina[S][C] == 126 && campoMaquina[S][C-1] == 126 && campoMaquina[S][C+1] == 126)
+            {
+                if (x == 0 || x == 2 || x == 3)
+                {
+                    campoMaquina[S][C] = 35;
+                }
+                if (x == 1)
+                {
+                    campoMaquina[S][C] = 35;
+                    campoMaquina[S][C-1] = 35;
+                    campoMaquina[S][C+1] = 35;                
+                }
+                verificar = 1;
+            }
+        } 
+    }
+}
+void Navio3AddMaquina(int linha, int coluna)
+{
+    int L = linha;
+    int C = coluna;
+    int S;
+    if (L+1 <=10 && C-2>0 && C+2 <=10)
+    {
+        for (int x = 0; x < 2; x++)
+        {
+            S = L + x;
+            if (campoMaquina[S][C] == 126 && campoMaquina[S][C-2] == 126 && campoMaquina[S][C+2] == 126)
+            {
+                if (x == 0)
+                {
+                    campoMaquina[L][C] = 35;
+                }
+                if (x == 1)
+                {
+                    campoMaquina[S][C-2] = 35;
+                    campoMaquina[S][C-1] = 35;
+                    campoMaquina[S][C] = 35;
+                    campoMaquina[S][C+1] = 35;
+                    campoMaquina[S][C+2] = 35;
+                }
+                verificar = 1;
+            } 
+        }
+    }
+}
+
+int NumeroAleatorio(){
+    int verificarAl = 0;
+    while ( verificarAl == 0 ){
+        int Numero = rand() % 11;
+        if ( Numero!= 0){
+            verificarAl = 1;
+            return Numero;
+        } 
+    }
+}
 
 
 int main(){
-    printf("========== Campo de batalha ==========\n");
+    LimparCampoMaquina();
     LimparCampo();
+    printf("========== Campo de batalha ==========\n");
+    Campo();
     printf("========== Navios disponiveis ==========\n");
     Navio1();
     Navio2();
     Navio3();
 
-    // Posicionar os navios
     int linha, coluna;
-    
-    while (verificar ==0){
+    while (verificar == 0){
         printf("Qual linha e coluna voce quer posicionar o navio 1? linha[0-10] coluna[0-10]  ");
         scanf("%d %d", &linha, &coluna);
         Navio1Add(linha, coluna);
@@ -226,18 +319,38 @@ int main(){
         scanf("%d %d", &linha, &coluna);
         Navio3Add(linha, coluna);
     }
-    
+    verificar = 0;
     printf("========== Seu mapa ==================\n");
     Campo();
 
-    printf("========== Mapa do oponente ==========\n");
-    CampoMaquina();
-    printf("Que os jogos comecem!");
-    // Criar campo do computador
-
-    // Criar sistema de batalha
-
     
+    int LinhaAleatoria, ColunaAleatoria;
+    srand(time(NULL));
+    while (verificar == 0)
+    {
+        LinhaAleatoria = NumeroAleatorio();
+        ColunaAleatoria= NumeroAleatorio();
+        Navio1AddMaquina(LinhaAleatoria, ColunaAleatoria);
+    }
+    verificar = 0; 
+    while (verificar == 0)
+    {
+        LinhaAleatoria = NumeroAleatorio();
+        ColunaAleatoria= NumeroAleatorio();
+        Navio2AddMaquina(LinhaAleatoria, ColunaAleatoria);
+    }
+    verificar = 0;
+    while (verificar == 0)
+    {
+        LinhaAleatoria = NumeroAleatorio();
+        ColunaAleatoria= NumeroAleatorio();
+        Navio3AddMaquina(LinhaAleatoria, ColunaAleatoria);
+    }
+    printf("\n========== Mapa do oponente ==========\n");
+    CampoMaquina();
+    printf("\nQue os jogos comecem!");
+
+
     return 0;
 
 }
