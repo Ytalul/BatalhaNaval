@@ -391,59 +391,51 @@ int main(){
         int linhaPenulTiro, colunaPenulTiro;
         if ( linhaUltimoTiro == 0 || linhaPenulTiro == 0)
         {
+            int linhaCerta, colunaCerta;
+            if ( linhaUltimoTiro!=0 ){
+                linhaCerta = linhaUltimoTiro;
+                colunaCerta = colunaUltimoTiro;
+            }
+            else {  
+                linhaCerta = linhaPenulTiro;
+                colunaCerta = colunaPenulTiro;
+            }
             int proximoTiro = NumeroAleatorio(4);
-            if ( proximoTiro == 1 && campo[linhaUltimoTiro+1][colunaUltimoTiro] == 35 )
+            if ( proximoTiro == 1 && campo[linhaCerta+1][colunaCerta] == 35 )
             {
-                campo[linhaUltimoTiro+1][colunaUltimoTiro] = 88;
+                campo[linhaCerta+1][colunaUltimoTiro] = 88;
                 linhaUltimoTiro = linhaUltimoTiro+1;
-                colunaUltimoTiro = colunaUltimoTiro+1;
                 printf("\nVoce foi atacado!!!\n");
                 Campo();
             }
-            else {tiroMal(linhaUltimoTiro+1,colunaUltimoTiro); break;}
+            else {tiroMal(linhaCerta+1,colunaCerta); break;}
             
-            if ( proximoTiro == 2 && campo[linhaUltimoTiro-1][colunaUltimoTiro] == 35 )
+            if ( proximoTiro == 2 && campo[linhaCerta-1][colunaCerta] == 35 )
             {
-                campo[linhaUltimoTiro-1][colunaUltimoTiro] = 88;
-                linhaUltimoTiro = linhaUltimoTiro+1;
-                colunaUltimoTiro = colunaUltimoTiro+1;
+                campo[linhaCerta-1][colunaCerta] = 88;
+                linhaUltimoTiro = linhaUltimoTiro-1;
                 printf("\nVoce foi atacado!!!\n");
                 Campo();
             }
-            else {tiroMal(linhaUltimoTiro-1,colunaUltimoTiro); break;}
+            else {tiroMal(linhaCerta-1,colunaCerta); break;}
 
-            if ( proximoTiro == 3 && campo[linhaUltimoTiro][colunaUltimoTiro-1] == 35 )
+            if ( proximoTiro == 3 && campo[linhaCerta][colunaCerta-1] == 35 )
             {
-                campo[linhaUltimoTiro][colunaUltimoTiro-1] = 88;
-                linhaUltimoTiro = linhaUltimoTiro+1;
-                colunaUltimoTiro = colunaUltimoTiro+1;
+                campo[linhaCerta][colunaCerta-1] = 88;
+                colunaUltimoTiro = colunaUltimoTiro-1;
                 printf("\nVoce foi atacado!!!\n");
                 Campo();
             }
-            else {tiroMal(linhaUltimoTiro,colunaUltimoTiro-1); break;}
+            else {tiroMal(linhaCerta,colunaCerta-1); break;}
 
-            if ( proximoTiro == 4 && campo[linhaUltimoTiro][colunaUltimoTiro+1] == 35 )
+            if ( proximoTiro == 4 && campo[linhaCerta][colunaCerta+1] == 35 )
             {
-                campo[linhaUltimoTiro][colunaUltimoTiro+1] = 88;
-                linhaUltimoTiro = linhaUltimoTiro+1;
+                campo[linhaCerta][colunaCerta+1] = 88;
                 colunaUltimoTiro = colunaUltimoTiro+1;
                 printf("\nVoce foi atacado!!!\n");
                 Campo();
             }
-            else {tiroMal(linhaUltimoTiro+1,colunaUltimoTiro); break;}
-        }
-        // Caso a ultima jogada nao tenha acertado o alvo ----------------------
-        else if ( campo[linhaAtkMaquina][colunaAtkMaquina] == 35 )
-        {
-            campo[linhaAtkMaquina][colunaAtkMaquina] = 88;
-            linhaUltimoTiro = linhaAtkMaquina;
-            colunaUltimoTiro = colunaAtkMaquina;
-            printf("\nVoce foi atacado!!!\n");
-            Campo();
-        }
-        else {
-            tiroMal(linhaAtkMaquina,colunaAtkMaquina);
-        }
+            else {tiroMal(linhaCerta+1,colunaCerta); break;}
     }
 
     if ( NaviosPlayer >= 16 ){
