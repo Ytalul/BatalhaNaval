@@ -5,6 +5,7 @@
 char campo[10][10];
 char campoMaquina[10][10];
 char campoMaquinaCopia[10][10];
+char Letras[10] = { 'A', 'B', 'C' , 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
 // variável que valida se as funções estão sendo utilizadas corretamente em sequência
 int verificar = 0;
 
@@ -21,11 +22,11 @@ void LimparCampo()
 }
 void Campo()
 {
-    int x= 1;
+    int x= 0;
     printf("    1  2  3  4  5  6  7  8  9  10\n");
     for (int counter = 1; counter <= 10; counter++)
     {   
-        printf(" %d  ",x);       
+        printf(" %c  ", Letras[x]);       
         for (int count = 1; count <= 10; count++)
         {
             printf("%c  ", campo[counter][count]);
@@ -67,11 +68,11 @@ void LimparCampoMaquinaCopiado()
 }
 void CampoMaquinaCopiado()
 {
-    int x= 1;
+    int x= 0;
     printf("    1  2  3  4  5  6  7  8  9  10\n");
     for (int counter = 1; counter <= 10; counter++)
     {
-        printf(" %d  ",x);  
+        printf(" %c  ", Letras[x]);  
         for (int count = 1; count <= 10; count++)
         {
             printf("%c  ", campoMaquinaCopia[counter][count]);
@@ -161,7 +162,6 @@ int Navio1Add(int linha, int coluna)
     }
     return 0;
 }
-
 void Navio2Add(int linha, int coluna)
 {
     int L = linha;
@@ -257,13 +257,11 @@ void Navio3AddMaquina(int linha, int coluna)
         verificar = 1;
     }
 }
+
 int NumeroAleatorio(int x){
     int Numero = (rand() % x)+1;
     return Numero;
 }
-
-
-// Sistema de batalha do jogador -----------------------------------
 
 // funções para validar as jogadas da máquina ----------------------------------------------------------
 void tiroMal(int lin, int col){
@@ -290,24 +288,31 @@ int main(){
 
     // Configurações do mapa do jogador ---------------------------------------------------
     int linha, coluna;
+    char linhaChar;
     while (verificar == 0){
-        printf("\nQual linha e coluna voce quer posicionar o navio 1? linha[0-10] coluna[0-10]");
-        scanf("%d%d", &linha, &coluna);
+        printf("\nQual linha e coluna voce quer posicionar o navio 1? linha[A-J] coluna[0-10]");
+        scanf( "%c%d",&linhaChar,&coluna);
+        fflush(stdin);
+        linha= linhaChar-64;
         Navio1Add(linha, coluna);}
     verificar=0;
     Campo();
 
     while ( verificar == 0 ){
-        printf("\nQual linha e coluna voce quer posicionar o navio 2? linha[0-10] coluna[0-10]");
-        scanf("%d %d", &linha, &coluna);
+        printf("\nQual linha e coluna voce quer posicionar o navio 2? linha[A-J] coluna[0-10]");
+        scanf( "%c%d", &linhaChar, &coluna);
+        fflush(stdin);
+        linha= linhaChar-64;
         Navio2Add(linha, coluna);}
     verificar = 0;    
     Campo();
 
     while (verificar == 0)
     {
-        printf("\nQual linha e coluna voce quer posicionar o navio 3? linha[0-10] coluna[0-10]");
-        scanf("%d %d", &linha, &coluna);
+        printf("\nQual linha e coluna voce quer posicionar o navio 3? linha[A-J] coluna[0-10]");
+        scanf( "%c%d", &linhaChar, &coluna);
+        fflush(stdin);
+        linha= linhaChar-64;
         Navio3Add(linha, coluna);}
     verificar = 0;
     printf("========== Seu mapa ==================\n");
@@ -341,15 +346,18 @@ int main(){
     CampoMaquinaCopiado();
     printf("\n==========Que os jogos comecem!==========");
 
-    // SISTEMA DE BATALHA  ----------------------------------------------------------
+    // SISTEMA DE BATALHA  ------------------------------------------------------------------------
     int NaviosPlayer =0, NaviosMaquina=0;
     while (NaviosPlayer<16 || NaviosMaquina < 16)
     {
-        int linhaAtkJogador, colunaAtkJogador;
+        int colunaAtkJogador, linhaAtkJogador;
+        char linhaChar;
         int JogadaValida = 0;
         while ( JogadaValida == 0 ){
-        printf("\nEscolha uma linha e coluna adversaria para atacar! linha[1-10] coluna[1-10] : \n");
-        scanf("%d %d", &linhaAtkJogador, &colunaAtkJogador);
+        printf("\nEscolha uma linha e coluna adversaria para atacar! linha[A-J] coluna[1-10] : \n");
+        scanf( "%c%d", &linhaChar, &colunaAtkJogador);
+        fflush(stdin);
+        linhaAtkJogador = linhaChar-64;
         if ( campoMaquina[linhaAtkJogador][colunaAtkJogador] == 35 )
         {
             campoMaquinaCopia[linhaAtkJogador][colunaAtkJogador] = 88;
@@ -387,10 +395,10 @@ int main(){
             }
         
         // Caso a ultima jogada tenha acertado o alvo -----------------------
-        int linhaUltimoTiro , colunaUltimoTiro;
-        int linhaPenulTiro, colunaPenulTiro;
-        if ( linhaUltimoTiro == 0 || linhaPenulTiro == 0)
-        {
+        int linhaUltimoTiro=0 , colunaUltimoTiro=0;
+        int linhaPenulTiro=0, colunaPenulTiro=0;
+        if ( linhaUltimoTiro != 0 || linhaPenulTiro != 0)
+        {   
             int linhaCerta, colunaCerta;
             if ( linhaUltimoTiro!=0 ){
                 linhaCerta = linhaUltimoTiro;
@@ -399,6 +407,8 @@ int main(){
             else {  
                 linhaCerta = linhaPenulTiro;
                 colunaCerta = colunaPenulTiro;
+                linhaUltimoTiro= linhaPenulTiro;  
+                colunaUltimoTiro = colunaPenulTiro;
             }
             int proximoTiro = NumeroAleatorio(4);
             if ( proximoTiro == 1 && campo[linhaCerta+1][colunaCerta] == 35 )
@@ -431,14 +441,31 @@ int main(){
             if ( proximoTiro == 4 && campo[linhaCerta][colunaCerta+1] == 35 )
             {
                 campo[linhaCerta][colunaCerta+1] = 88;
-                colunaUltimoTiro = colunaUltimoTiro+1;
+                colunaUltimoTiro = colunaUltimoTiro+1; 
                 printf("\nVoce foi atacado!!!\n");
                 Campo();
             }
             else {tiroMal(linhaCerta+1,colunaCerta); break;}
+        }
+        // Caso a ultima jogada nao tenha acertado o alvo ----------------------
+        else if ( campo[linhaAtkMaquina][colunaAtkMaquina] == 35 )
+        {
+            campo[linhaAtkMaquina][colunaAtkMaquina] = 88;
+            linhaUltimoTiro = linhaAtkMaquina;
+            colunaUltimoTiro = colunaAtkMaquina;
+            printf("\nVoce foi atacado!!!\n");
+            Campo();
+        }
+        else {
+            linhaUltimoTiro = 0;
+            colunaUltimoTiro = 0;
+            linhaPenulTiro = linhaUltimoTiro;
+            colunaPenulTiro = colunaUltimoTiro;
+            tiroMal(linhaAtkMaquina,colunaAtkMaquina);
+        }
     }
 
-    if ( NaviosPlayer >= 16 ){
+    if ( NaviosPlayer == 16 ){
         printf("Parabens, voce ganhou o jogo!");
     }
     else { 
